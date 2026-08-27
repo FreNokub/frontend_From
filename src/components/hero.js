@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function Herosection() {
   return (
@@ -8,7 +8,7 @@ export default function Herosection() {
 
       <div className="relative mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-         
+          
           {/* Left Content */}
           <div className="text-center lg:text-left">
             <span className="inline-block rounded-full bg-white/20 px-4 py-2 text-sm text-white backdrop-blur">
@@ -60,5 +60,5 @@ export default function Herosection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
