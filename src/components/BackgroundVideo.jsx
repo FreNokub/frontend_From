@@ -15,14 +15,24 @@ export default function BackgroundVideo() {
     }
   };
 
+  // เมื่อเล่นจบ หน่วงเวลา 5 วินาที แล้วค่อยเริ่มเล่นใหม่
+  const handleEnded = () => {
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+    }, 5000); // 5,000 มิลลิวินาที = 5 วินาที
+  };
+
   return (
     <>
       <video
         ref={videoRef}
         autoPlay
-        loop={true} // << ลองเปลี่ยนเป็น loop={true} ตรงนี้ครับ
         muted
         playsInline
+        onEnded={handleEnded} // ดักจับตอนจบคลิปเพื่อเริ่มนับถอยหลัง 5 วิ
         className="fixed top-0 left-0 w-full h-full object-cover -z-10 opacity-40"
       >
         <source src="/honkaiporipori.mp4" type="video/mp4" />
