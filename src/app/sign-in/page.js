@@ -70,45 +70,28 @@ const RainEffect = () => {
   )
 }
 
-export default function SignUpPage() {
+export default function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSignUp = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-
-    // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
-    if (password !== confirmPassword) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'รหัสผ่านไม่ตรงกัน',
-        text: 'กรุณากรอกรหัสผ่านทั้งสองช่องให้ตรงกัน',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          popup: 'rounded-2xl bg-slate-900 text-slate-100 border border-red-500/30',
-          title: 'text-slate-100 font-bold',
-        },
-      })
-      return
-    }
-
     setIsLoading(true)
 
-    // จำลองการสมัครสมาชิกและบันทึกข้อมูล
+    // จำลองชื่อผู้ใช้จากอีเมลที่พิมพ์เข้ามา
     const username = email.split('@')[0] || 'ผู้ใช้งาน'
-    localStorage.setItem('registeredEmail', email)
-    localStorage.setItem('registeredPassword', password)
+
+    // บันทึกสถานะลงในเครื่อง
+    localStorage.setItem('isLoggedIn', 'true')
     localStorage.setItem('userName', username)
 
-    // แจ้งเตือนสมัครสมาชิกสำเร็จ
+    // แจ้งเตือนสวยๆ ด้วย SweetAlert2 ธีมเข้ากัน
     await Swal.fire({
       icon: 'success',
-      title: 'สมัครสมาชิกสำเร็จ!',
-      text: 'กำลังพาคุณไปยังหน้าเข้าสู่ระบบ...',
-      timer: 1500,
+      title: 'เข้าสู่ระบบสำเร็จ',
+      timer: 1000,
       showConfirmButton: false,
       customClass: {
         popup: 'rounded-2xl bg-slate-900 text-slate-100 border border-blue-500/30',
@@ -116,8 +99,8 @@ export default function SignUpPage() {
       },
     })
 
-    // พาไปหน้าเข้าสู่ระบบ (Sign In)
-    router.push('/sign-in') // หรือเปลี่ยนเป็น path หน้า Login ของคุณ
+    // บังคับรีเฟรชหน้าเว็บเล็กน้อยเพื่อให้ Navbar อัปเดตสถานะทันที แล้วพาไปหน้า Home
+    window.location.href = '/'
   }
 
   return (
@@ -129,25 +112,25 @@ export default function SignUpPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 translate-y-1/2 w-80 h-80 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* 📦 กล่อง Card สมัครสมาชิก */}
+      {/* 📦 กล่อง Card เข้าสู่ระบบ */}
       <div className="relative z-10 w-full max-w-md rounded-2xl bg-slate-900/70 backdrop-blur-xl p-6 sm:p-8 shadow-2xl border border-blue-500/20 shadow-blue-950/50 space-y-6">
         
         {/* Header & Logo Icon */}
         <div className="text-center space-y-2">
           <div className="w-14 h-14 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-blue-500/30 border border-blue-400/30">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
             </svg>
           </div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-slate-100 to-blue-300 bg-clip-text text-transparent">
-            สมัครสมาชิก
+            เข้าสู่ระบบ
           </h2>
           <p className="text-xs sm:text-sm text-slate-400">
-            สร้างบัญชีใหม่เพื่อเริ่มต้นใช้งาน
+            กรุณากรอกอีเมลและรหัสผ่านของคุณ
           </p>
         </div>
         
-        <form onSubmit={handleSignUp} className="flex flex-col gap-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
           
           {/* Email Input */}
           <div className="space-y-1.5">
@@ -189,26 +172,6 @@ export default function SignUpPage() {
             </div>
           </div>
 
-          {/* Confirm Password Input */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">ยืนยันรหัสผ่าน</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <input 
-                type="password" 
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full bg-slate-800/60 border border-slate-700/80 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-
           {/* Submit Button */}
           <button 
             type="submit"
@@ -218,17 +181,17 @@ export default function SignUpPage() {
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>กำลังสมัครสมาชิก...</span>
+                <span>กำลังเข้าสู่ระบบ...</span>
               </>
             ) : (
-              <span>สมัครสมาชิก</span>
+              <span>เข้าสู่ระบบ</span>
             )}
           </button>
         </form>
 
         {/* Footer Link */}
         <p className="mt-6 text-center text-xs text-slate-400">
-          มีบัญชีอยู่แล้วใช่หรือไม่? <Link href="/sign-in" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors hover:underline">เข้าสู่ระบบ</Link>
+          ยังไม่มีบัญชีใช่หรือไม่? <Link href="/sign-up" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors hover:underline">สมัครสมาชิก</Link>
         </p>
       </div>
     </main>

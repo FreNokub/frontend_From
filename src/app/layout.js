@@ -1,23 +1,36 @@
-import Navbar from "./components/navbar"; // อ้างอิง path ให้ตรงกับโฟลเดอร์ของคุณ
-import "./globals.css"; // อย่าลืม import ไฟล์ CSS เพื่อให้ Tailwind ทำงาน
+import Navbar from "@/components/Navigation";
+import BackgroundVideo from "@/components/BackgroundVideo"; // << เพิ่มบรรทัดนี้เพื่อดึงคอมโพเนนต์วิดีโอมาใช้
+import { Prompt } from "next/font/google";
+import "./globals.css";
+
+const prompt = Prompt({
+  subsets: ["thai", "latin"],
+  weight: ["300"],
+  variable: "--font-prompt",
+});
 
 export const metadata = {
-  title: "MyWebsite - เว็บไซต์ของฉัน",
-  description: "รายละเอียดเว็บไซต์ของคุณ",
+  title: "Register App",
+  description: "Next.js Register Form",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="th">
-      {/* ใช้พื้นหลังสีเทาอ่อนๆ เพื่อให้หน้าเว็บดูมีมิติ และให้ Navbar สีขาวเด่นขึ้นมา */}
-      <body className="bg-slate-50 min-h-screen flex flex-col font-sans text-gray-900">
+    <html
+      lang="en"
+      className={`${prompt.variable} h-full antialiased`}
+    >
+      {/* เพิ่ม relative และสีพื้นหลัง (เผื่อวิดีโอโหลดไม่ทัน) ให้กับ body */}
+      <body className="relative min-h-full flex flex-col bg-black text-white">
         
-        <Navbar />
+        {/* นำ BackgroundVideo มาใส่แทนแท็ก video เดิม */}
+        <BackgroundVideo />
 
-        {/* ส่วนแสดงเนื้อหาของแต่ละหน้า (Page content) */}
-        <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+        {/* ห่อเนื้อหาด้วย div เพื่อตั้งค่า z-10 ให้อยู่เหนือวิดีโอ */}
+        <div className="relative z-10 flex flex-col flex-grow h-full">
+          <Navbar />
           {children}
-        </main>
+        </div>
         
       </body>
     </html>
